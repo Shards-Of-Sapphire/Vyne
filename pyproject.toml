@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deepaudit"
+version = "0.1.0"
+description = "Automated security auditor for AI-generated code, focusing on AST logic and hallucination detection."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Shaik Zayed Saleem", email = "zayed@sapphire.dev"}, # Update as needed
+]
+keywords = ["security", "ast", "ai-code", "audit", "static-analysis"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+]
+
+# --- Core Dependencies ---
+dependencies = [
+    "tree-sitter>=0.20.0",  # High-speed AST Parsing
+    "requests>=2.31.0",     # Registry Verification (PyPI/NPM)
+    "rich>=13.7.0",         # Professional CLI Output
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",        # Modern Testing
+    "ruff>=0.3.0",          # Fast Linting & Formatting
+    "mypy>=1.9.0",          # Static Type Checking
+]
+
+# --- Entry Points ---
+# This allows you to run 'deepaudit' directly in the terminal
+[project.scripts]
+deepaudit = "deepaudit.cli:main"
+
+# --- Tool Configurations ---
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "B", "I"] # Error, Flake8, Bugbear, Isort
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
