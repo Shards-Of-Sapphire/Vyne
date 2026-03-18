@@ -1,0 +1,17 @@
+# --- Core Engine ---
+# High-performance incremental parsing system for ASTs
+tree-sitter>=0.20.0
+
+# --- Scanners & API ---
+# For real-time PyPI/NPM registry verification (Anti-Hallucination)
+requests>=2.31.0
+
+# --- CLI & Reporting ---
+# For beautiful, color-coded terminal reports and tables
+rich>=13.7.0
+
+# --- Development & Testing ---
+# Modern test runner
+pytest>=8.0.0
+# The fastest Python linter/formatter in 2026
+ruff>=0.3.0
