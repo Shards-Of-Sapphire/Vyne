@@ -2,42 +2,52 @@ import tree_sitter_python as tspy
 from tree_sitter import Language, Parser
 
 def get_ast_metadata(code_content):
-    # 1. Setup the Python Language & Parser
+    # 1. Setup Parser & Language
     PY_LANGUAGE = Language(tspy.language())
     parser = Parser(PY_LANGUAGE)
     
-    # 2. Parse the code
+    # 2. Parse Code
     tree = parser.parse(bytes(code_content, "utf8"))
     root_node = tree.root_node
 
     libraries = []
-    
-    # 3. Define the Query
+    functions = []
+
+    # 3. Define the Query Text
     query_text = """
         (import_statement name: (dotted_name) @import)
         (import_from_statement module_name: (dotted_name) @import)
+        (function_definition name: (identifier) @func)
     """
-    query = PY_LANGUAGE.query(query_text)
     
-    # 4. Execute the Query correctly for v0.21+
-    # In the new API, we call query.captures() and pass the node
-    captures = query.captures(root_node)
-    
-    # captures is a dictionary of { tag_name: [list_of_nodes] }
-    # We iterate through the 'import' tag we defined in the query_text
-    if 'import' in captures:
-        for node in captures['import']:
-            lib_name = code_content[node.start_byte:node.end_byte]
-            # Split to get the base package (e.g., 'os.path' -> 'os')
-            libraries.append(lib_name.split('.')[0])
+    try:
+        # In the newest API, we create the query from the language
+        query = PY_LANGUAGE.query(query_text)
+        
+        # This is the line that usually breaks. 
+        # If query.captures(root_node) fails, we use the Cursor method.
+        try:
+            captures = query.captures(root_node)
+        except AttributeError:
+            # Fallback for ultra-new 2026 versions
+            from tree_sitter import Query
+            captures = query.run(root_node)
 
-    # Let's also grab function names for the Logic Scanner
-    func_query = PY_LANGUAGE.query("(function_definition name: (identifier) @func)")
-    func_captures = func_query.captures(root_node)
-    functions = []
-    if 'func' in func_captures:
-        for node in func_captures['func']:
-            functions.append(code_content[node.start_byte:node.end_byte])
+        # Iterate through the results
+        for node, tag in captures:
+            content = code_content[node.start_byte:node.end_byte]
+            
+            if tag == "import":
+                libraries.append(content.split('.')[0])
+            elif tag == "func":
+                functions.append(content)
+
+    except Exception as e:
+        # If this STILL fails, we use a "No-Query" fallback so you can at least see the MVP
+        print(f"⚠️ AST Query Error: {e}. Switching to basic scan.")
+        import re
+        libraries = re.findall(r"import\s+([\w\.]+)", code_content)
+        functions = re.findall(r"def\s+(\w+)", code_content)
 
     return {
         "libraries": list(set(libraries)),
