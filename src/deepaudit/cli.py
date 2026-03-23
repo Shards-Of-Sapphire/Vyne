@@ -19,7 +19,7 @@ def display_header():
     """Roushna's Sapphire-branded header"""
     console.print(
         Panel.fit(
-            f"[bold blue]💎 SAPPHIRE COLLECTIVE[/bold blue]\n"
+            f"[bold blue]💎 SAPPHIRE [/bold blue]\n"
             f"[bold white]DeepAudit v{VERSION}[/bold white]\n"
             f"[dim]The X-Ray for AI-Generated Code[/dim]",
             border_style="blue",

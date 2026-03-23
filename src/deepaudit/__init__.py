@@ -1,10 +1,10 @@
 """
 DeepAudit: The X-Ray for AI-Generated Code.
-Built by the Sapphire Collective.
+Built by Sapphire.
 """
 
-__version__ = "0.1.0"
-__author__ = "Shaik Zayed Saleem & The Sapphire Collective"
+__version__ = "0.2.0"
+__author__ = "The Sapphire"
 __license__ = "MIT"
 
 # Exposing the version so Roushna can easily pull it for the CLI

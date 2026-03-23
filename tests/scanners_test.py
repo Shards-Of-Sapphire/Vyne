@@ -1,17 +1,17 @@
 import pytest
-from deepaudit.scanners.dependency import verify_package
+from deepaudit.scanners.dependency  import verify_dependencies
 from deepaudit.scanners.secret import scan_for_secrets
 
 # --- Test 1: Dependency Verification ---
 def test_verify_real_package():
     # 'requests' is a pillar of the internet; it should always be True
-    exists, msg = verify_package("requests")
+    exists, msg = verify_dependencies.verify_package("requests")
     assert exists is True
     assert "Verified" in msg
 
 def test_verify_fake_package():
     # This package definitely doesn't exist
-    exists, msg = verify_package("this_is_a_hallucinated_package_12345")
+    exists, msg = verify_dependencies.verify_package("this_is_a_hallucinated_package_12345")
     assert exists is False
     assert "HALLUCINATION" in msg
 
