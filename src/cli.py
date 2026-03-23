@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 # Backend & Versioning Imports
-from deepaudit import VERSION
+from src import VERSION
 from deepaudit.engine.parser import CodeParser
 from deepaudit.scanners import ACTIVE_SCANNERS
 

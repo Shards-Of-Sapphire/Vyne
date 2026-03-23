@@ -6,9 +6,9 @@ from rich.console import Console
 console = Console()
 
 try:
-    import deepaudit
+    import src
     console.print("[bold green]✅ Success![/bold green] DeepAudit package is resolved.")
-    console.print(f"📍 Location: [cyan]{deepaudit.__file__}[/cyan]")
+    console.print(f"📍 Location: [cyan]{src.__file__}[/cyan]")
 except ImportError:
     console.print("[bold red]❌ Error:[/bold red] DeepAudit not found. Did you run 'pip install -e .'?")
 

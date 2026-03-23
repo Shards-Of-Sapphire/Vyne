@@ -4,9 +4,9 @@ import psutil
 import argparse
 from pathlib import Path
 from multiprocessing import Process, Queue, cpu_count
-from src.deepaudit.engine.parser import CodeParser
-from src.deepaudit.scanners import ACTIVE_SCANNERS
-from src.deepaudit.utils.logger import get_logger
+from src.engine.parser import CodeParser
+from src.scanners import ACTIVE_SCANNERS
+from src.utils.logger import get_logger
 
 # Initialize Sapphire Logger
 logger = get_logger("BOMBARD")
@@ -45,7 +45,7 @@ class BombardmentEngine:
                 if ast:
                     # Run the Explicit Manifest Registry
                     for scanner in ACTIVE_SCANNERS:
-                        findings = scanner(ast)
+                        findings = scanner(ast) or []
                         findings_count += len(findings)
 
                 duration = (time.perf_counter() - start_time) * 1000

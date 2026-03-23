@@ -3,7 +3,7 @@ import sys
 
 import requests
 
-from src.deepaudit.utils.config import ConfigManager, get_config
+from deepaudit.utils.config import ConfigManager, get_config
 
 logger = logging.getLogger("Scanner.Deps")
 config = ConfigManager()
