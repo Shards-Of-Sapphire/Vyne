@@ -59,9 +59,9 @@ pip install -e .
 2. Run your first Audit
 Bash
 ```
-deepaudit examples/target_code.py
+deepaudit tests/v0.3.0_test.py
 ```
-The repository now includes [`examples/target_code.py`](examples/target_code.py) as a sample input.
+The repository now includes [`tests/v0.3.0_test.py`](tests/v0.3.0_test.py) as a sample input.
 🧪 Quality Assurance
 DeepAudit maintains a generous pass rate on its core scanner suite. Run the tests via:
 
