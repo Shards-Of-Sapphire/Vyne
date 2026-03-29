@@ -28,36 +28,51 @@ def display_header() -> None:
     )
 
 
-def _build_results_table(target_name: str) -> Table:
+def _build_results_table(filename: str) -> Table:
+    """Constructs the Rich table schema for v0.3.0."""
     table = Table(
-        title=f"Security Audit: {target_name}",
-        show_header=True,
+        title=f"Security Audit: {filename}", 
+        show_header=True, 
         header_style="bold magenta",
+        expand=True
     )
-    table.add_column("Severity", width=12)
-    table.add_column("Issue", style="white")
-    table.add_column("Recommended Fix", style="green")
+    table.add_column("Severity", style="bold", width=12)
+    table.add_column("Line", justify="right", style="cyan", width=6)
+    table.add_column("Scanner", style="blue", width=18)
+    table.add_column("Issue Details", style="white")
     return table
 
 
-def _render_findings(results_table: Table, findings_by_scanner: Iterable[list[dict]]) -> int:
-    findings_count = 0
-    for findings in findings_by_scanner:
-        for issue in findings:
-            severity = issue.get("severity", "INFO")
-            severity_color = {
-                "CRITICAL": "bold red",
-                "HIGH": "red",
-                "MEDIUM": "yellow",
-                "LOW": "blue",
-            }.get(severity, "white")
-            results_table.add_row(
-                f"[{severity_color}]{severity}[/{severity_color}]",
-                issue.get("issue", "Unknown issue"),
-                issue.get("fix", "No remediation provided."),
-            )
-            findings_count += 1
-    return findings_count
+def _render_findings(table: Table, findings_by_scanner: list[list[dict]]) -> int:
+    """Parses the v0.3.0 dictionary schema and populates the UI table."""
+    count = 0
+    for scanner_findings in findings_by_scanner:
+        for finding in scanner_findings:
+            count += 1
+            
+            # Extract data using the strict v0.3.0 schema
+            severity = finding.get("severity", "UNKNOWN")
+            line = str(finding.get("line", "?"))
+            scanner = finding.get("scanner", "UnknownScanner")
+            message = finding.get("message", "Unknown issue")
+            snippet = finding.get("snippet", "")
+            
+            # Add dynamic colors based on severity
+            if severity == "CRITICAL":
+                sev_fmt = f"[bold red]{severity}[/bold red]"
+            elif severity == "WARNING":
+                sev_fmt = f"[bold yellow]{severity}[/bold yellow]"
+            else:
+                sev_fmt = f"[bold blue]{severity}[/bold blue]"
+                
+            # Combine message and snippet for a clean UI
+            details = message
+            if snippet:
+                details += f"\n[dim italic]Code: {snippet}[/dim italic]"
+                
+            table.add_row(sev_fmt, line, scanner, details)
+            
+    return count
 
 
 def run_audit(file_path: str) -> int:

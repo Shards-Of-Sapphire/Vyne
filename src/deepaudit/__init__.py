@@ -2,7 +2,7 @@
 DeepAudit: the X-Ray for AI-generated code.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.1"
 __author__ = "The Sapphire"
 __license__ = "Apache-2.0"
 VERSION = __version__
