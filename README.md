@@ -3,7 +3,7 @@
 
 Collective: Sapphire
 
-Status: MVP (v0.2.0)
+Status: MVP (v0.3.0)
 
 # The Mission
 As AI agents (like AutoGPT, OpenDevin, and Gemini) become standard in software workflows, we face a new security frontier: The Hallucination Gap. AI frequently generates code using libraries that don't exist or logic that contains "mental lapses" (like hardcoded credentials or eval() traps).
@@ -59,9 +59,9 @@ pip install -e .
 2. Run your first Audit
 Bash
 ```
-deepaudit examples/target_code.py
+deepaudit tests/v0.3.1_test.py
 ```
-The repository now includes [`examples/target_code.py`](examples/target_code.py) as a sample input.
+The repository now includes [`tests/v0.3.1_test.py`](tests/v0.3.1_test.py) as a sample input.
 🧪 Quality Assurance
 DeepAudit maintains a generous pass rate on its core scanner suite. Run the tests via:
 
