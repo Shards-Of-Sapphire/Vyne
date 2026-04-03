@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-def audit_logic(metadata):
-    """
-    Placeholder for Aayat's logic scanner.
-    Currently looking for eval() and exec() calls.
-    """
-    findings = []
-    code = metadata.get('raw_code', '')
-    
-    # Simple check for demo purposes
-    if "eval(" in code or "exec(" in code:
-        findings.append({
-            "severity": "HIGH",
-            "issue": "Dangerous Execution: 'eval' or 'exec' detected.",
-            "fix": "Avoid dynamic execution of AI-generated strings. Use safer alternatives."
-        })
-        
-=======
 # src/deepaudit/scanners/static.py
 
 def scan(ast_node, raw_code: str, file_path: str) -> list[dict]:
@@ -42,6 +24,4 @@ def scan(ast_node, raw_code: str, file_path: str) -> list[dict]:
                     "message": f"Dangerous dynamic execution function detected: '{func}'",
                     "snippet": line_clean
                 })
-                
->>>>>>> ba8e9ed80daf1e7830b688e8357da3c9ccf9ca6d
     return findings

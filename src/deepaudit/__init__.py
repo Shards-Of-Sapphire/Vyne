@@ -1,5 +1,4 @@
 """
-<<<<<<< HEAD
 DeepAudit: The X-Ray for AI-Generated Code.
 Built by Sapphire.
 """
