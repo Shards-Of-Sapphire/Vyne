@@ -267,7 +267,7 @@ const StateDisplay = ({
 
 // ============================================
 // ATOMIC COMPONENT: Creative Header
-// Features: Deep Audit bold main title, SAPPHIRE badge top right, actual logo
+// Features: Vyne bold main title, SAPPHIRE badge top right, actual logo
 // ============================================
 const CreativeHeader = () => (
   <div className="relative">
@@ -290,7 +290,7 @@ const CreativeHeader = () => (
         <div className="relative w-24 h-24 bg-gradient-to-br from-stone-100 to-stone-200 dark:from-stone-800 dark:to-stone-900 rounded-2xl p-2 shadow-xl border-2 border-emerald-500/20 overflow-hidden">
           <img 
             src="/logo.jpeg" 
-            alt="DeepAudit Logo"
+            alt="Vyne Logo"
             className="w-full h-full object-cover rounded-xl"
           />
           {/* Animated scan line overlay */}
@@ -302,7 +302,7 @@ const CreativeHeader = () => (
       <div className="flex-1 pt-2">
         <div className="flex items-baseline gap-3">
           <h1 className="text-5xl font-black text-stone-900 dark:text-stone-100 tracking-tight">
-            DEEP AUDIT
+            VYNE
           </h1>
           <div className="h-8 w-1 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-full"></div>
           <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
@@ -418,7 +418,7 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to connect to the DeepAudit engine.");
+        throw new Error("Failed to connect to the Vyne engine.");
       }
 
       const data = await response.json();
@@ -468,7 +468,7 @@ export default function Home() {
         {/* ============================================
             HEADER SECTION
             States: always visible
-            Features: Creative layout with SAPPHIRE badge, Deep Audit title, logo
+            Features: Creative layout with SAPPHIRE badge, Vyne title, logo
             ============================================ */}
         <header className="border-b-2 border-stone-200 dark:border-stone-800 pb-8">
           <CreativeHeader />

@@ -1,4 +1,4 @@
-# DeepAudit v0.2.0 Configuration
+# Vyne v0.2.0 Configuration
 whitelist:
   - rich                          # Explicitly trust local class names
   - tree_sitter                   # Explicitly trust local class names

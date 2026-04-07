@@ -3,7 +3,7 @@ import importlib
 from pathlib import Path
 from typing import List, Dict, Any, Callable
 
-from deepaudit.utils.logger import get_logger
+from ..utils.logger import get_logger
 
 logger = get_logger("REGISTRY")
 

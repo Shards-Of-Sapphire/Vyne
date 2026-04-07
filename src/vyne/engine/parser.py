@@ -1,6 +1,6 @@
 from asyncio.log import logger
 from importlib.metadata import metadata
-from deepaudit.utils.logger import get_logger
+from ..utils.logger import get_logger
 from pathlib import Path
 from rich import tree
 import tree_sitter_python as tspy

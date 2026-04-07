@@ -11,11 +11,11 @@ WORKDIR /app
 # 4. Copy your project files into the container
 COPY . /app/
 
-# 5. Install DeepAudit and its dependencies using the pyproject.toml we just made
+# 5. Install Vyne and its dependencies using the pyproject.toml we just made
 RUN pip install --no-cache-dir .
 
 # 6. Expose the port the FastAPI server will run on
 EXPOSE 8000
 
 # 7. The command to boot the API Gateway when the container starts
-CMD ["uvicorn", "deepaudit.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "vyne.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

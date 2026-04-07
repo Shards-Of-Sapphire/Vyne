@@ -11,12 +11,12 @@ if str(SRC_ROOT) not in sys.path:
 console = Console()
 
 try:
-    import deepaudit
-    console.print("[bold green]✅ Success![/bold green] DeepAudit package is resolved.")
-    console.print(f"Location: [cyan]{deepaudit.__file__}[/cyan]")
+    import vyne
+    console.print("[bold green]✅ Success![/bold green] Vyne package is resolved.")
+    console.print(f"Location: [cyan]{vyne.__file__}[/cyan]")
 except ImportError:
     console.print(
-        "[bold red]Error:[/bold red] DeepAudit not found. "
+        "[bold red]Error:[/bold red] Vyne not found. "
         "Install the package or add src to PYTHONPATH."
     )
 

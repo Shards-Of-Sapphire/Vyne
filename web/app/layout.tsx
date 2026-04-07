@@ -13,7 +13,7 @@ import "./globals.css";
 // });
 
 export const metadata: Metadata = {
-  title: "SAPPHIRE - DeepAudit Dashboard",
+  title: "SAPPHIRE - Vyne Dashboard",
   description: "AI-Generated Code Security Scanner - The X-Ray for Your Code",
 };
 

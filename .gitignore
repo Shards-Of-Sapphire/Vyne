@@ -18,8 +18,8 @@ ENV/
 
 # --- Tree-sitter & Engine Artifacts ---
 # Ignore compiled C/C++ parser files (they vary by OS)
-src/deepaudit/engine/parser/*.c
-src/deepaudit/engine/parser/*.h
+src/vyne/engine/parser/*.c
+src/vyne/engine/parser/*.h
 *.dylib
 *.dll
 *.so

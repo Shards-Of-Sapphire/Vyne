@@ -25,7 +25,7 @@ class ConfigManager:
         Returns a unified set of:
         Internal Folders + Standard Lib + User config.yaml
         """
-        internal = {"deepaudit", "src", "engine", "scanners", "utils"}
+        internal = {"vyne", "src", "engine", "scanners", "utils"}
         user_defined = set(self.data.get("whitelist", []))
         
         # Combine everything into one master set
@@ -46,12 +46,5 @@ def is_debug():
 def get_pypi_token():
     return get_config("PYPI_TOKEN")
 
-
-from deepaudit.utils.config import (
-    ConfigManager,
-    get_config,
-    get_pypi_token,
-    is_debug,
-)
 
 __all__ = ["ConfigManager", "get_config", "is_debug", "get_pypi_token"]

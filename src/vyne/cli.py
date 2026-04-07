@@ -7,10 +7,9 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
-from deepaudit import VERSION
-from deepaudit.engine.parser import CodeParser
-from deepaudit.engine.parser import CodeParser
-from deepaudit.scanners.scanners import ScannerRegistry
+from . import VERSION
+from .engine.parser import CodeParser
+from .scanners.scanners import ScannerRegistry
 
 console = Console()
 registry = ScannerRegistry()
@@ -20,7 +19,7 @@ def display_header() -> None:
     console.print(
         Panel.fit(
             f"[bold blue]SAPPHIRE[/bold blue]\n"
-            f"[bold white]DeepAudit v{VERSION}[/bold white]\n"
+            f"[bold white]Vyne v{VERSION}[/bold white]\n"
             f"[dim]The X-Ray for AI-Generated Code[/dim]",
             border_style="blue",
             padding=(1, 4),
@@ -135,13 +134,13 @@ def run_audit(file_path: str) -> int:
     return 0
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="DeepAudit CLI")
+    parser = argparse.ArgumentParser(description="Vyne CLI")
     parser.add_argument("file", help="Path to the Python file to audit")
     parser.add_argument(
         "-v",
         "--version",
         action="version",
-        version=f"DeepAudit {VERSION}",
+        version=f"Vyne {VERSION}",
     )
     args = parser.parse_args()
     return run_audit(args.file)

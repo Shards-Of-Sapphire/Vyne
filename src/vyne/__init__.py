@@ -1,5 +1,5 @@
 """
-DeepAudit: The X-Ray for AI-Generated Code.
+Vyne: The X-Ray for AI-Generated Code.
 Built by Sapphire.
 """
 
@@ -10,7 +10,7 @@ __license__ = "MIT"
 # Exposing the version so Roushna can easily pull it for the CLI
 VERSION = __version__
 """
-DeepAudit: the X-Ray for AI-generated code.
+Vyne: the X-Ray for AI-generated code.
 """
 
 __version__ = "0.3.1"

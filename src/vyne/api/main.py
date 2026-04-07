@@ -1,16 +1,16 @@
-# src/deepaudit/api/main.py
+# src/vyne/api/main.py
 import tempfile
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from deepaudit.engine.parser import CodeParser
-from deepaudit.scanners.scanners import ScannerRegistry
+from .engine.parser import CodeParser
+from .scanners.scanners import ScannerRegistry
 
 # Initialize the FastAPI application
 app = FastAPI(
-    title="DeepAudit API",
+    title="Vyne API",
     description="The Safe-Guard AI Audit Engine by Sapphire Collective.",
     version="0.3.0"
 )
@@ -34,7 +34,7 @@ class AuditRequest(BaseModel):
 async def scan_code(request: AuditRequest):
     """
     Receives raw code via HTTP POST, audits it using the localized 
-    DeepAudit engine, and returns the findings as pure JSON.
+    Vyne engine, and returns the findings as pure JSON.
     """
     if not request.code.strip():
         raise HTTPException(status_code=400, detail="No code provided.")
