@@ -3,9 +3,13 @@ import ast
 import argparse
 from pathlib import Path
 
+# Ensure the local src package is importable when running tools from the repo root
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "src"))
+
 # 1. Standardized Package Imports
-from deepaudit.utils.logger import get_logger
-from deepaudit.utils.crawler import SourceCrawler
+from vyne.utils.logger import get_logger
+from vyne.utils.crawler import SourceCrawler
 
 # 2. Sibling Import for Tools
 from renderer import MarkdownRenderer
@@ -14,14 +18,14 @@ logger = get_logger("AUTODOC")
 
 class AutodocAgent:
     def __init__(self):
-        # Anchor to the root 'DeepAudit' folder
+        # Anchor to the root 'Vyne' folder
         self.project_root = Path(__file__).resolve().parent.parent
         
         # Point the crawler exactly at the inner source package
-        self.crawler = SourceCrawler(str(self.project_root / "src" / "deepaudit"))
+        self.crawler = SourceCrawler(str(self.project_root / "src" / "vyne"))
         
         # Point the renderer exactly to your new docs folder
-        docs_dir = self.project_root / "src" / "deepaudit" / "docs"
+        docs_dir = self.project_root / "src" / "vyne" / "docs"
         self.renderer = MarkdownRenderer(str(docs_dir / "API_CODEX.md"))
         
         self.registry = {}
@@ -79,14 +83,14 @@ class AutodocAgent:
             total_missing += missing
             
         self.renderer.render(self.registry)
-        logger.info(f"✅ Codex mapped to src/deepaudit/docs/API_CODEX.md")
+        logger.info(f"✅ Codex mapped to src/vyne/docs/API_CODEX.md")
 
         if strict_mode and total_missing > 0:
             logger.error(f"❌ STRICT MODE FAILED: {total_missing} public methods lack docstrings.")
             sys.exit(1)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="DeepAudit Autodoc Agent")
+    parser = argparse.ArgumentParser(description="Vyne Autodoc Agent")
     parser.add_argument("--check", action="store_true", help="Fail if docstrings are missing.")
     args = parser.parse_args()
 

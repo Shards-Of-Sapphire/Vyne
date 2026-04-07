@@ -10,6 +10,10 @@ PyYAML>=6.0.1
 # --- Scanners & API ---
 # For real-time PyPI/NPM registry verification (Anti-Hallucination)
 requests>=2.31.0
+# Web API layer
+fastapi>=0.105.0
+# ASGI server for FastAPI
+uvicorn>=0.23.0
 
 # --- CLI & Reporting ---
 # For beautiful, color-coded terminal reports and tables

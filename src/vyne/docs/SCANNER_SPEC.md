@@ -1,8 +1,8 @@
-## 🛡️ DeepAudit Scanner Specification (v0.2.0)
+## 🛡️ Vyne Scanner Specification (v0.2.0)
 The Scanner Registry is a modular "plugin" system. Its purpose is to take the structured data provided by the Tree-sitter Engine and apply security heuristics to find vulnerabilities.
 
 *1. The Scanner Interface*
-Every scanner in the src/deepaudit/scanners/ directory must follow a strict functional contract. This ensures the CLI can call any scanner without knowing its internal logic.
+Every scanner in the src/vyne/scanners/ directory must follow a strict functional contract. This ensures the CLI can call any scanner without knowing its internal logic.
 
 Input: A single dictionary named metadata.
 
@@ -51,7 +51,7 @@ To keep the UI consistent, every scanner must return findings in this exact stru
 The __init__.py file in the scanners folder acts as the Central Dispatch. It prevents the CLI from having to import 50 different files.
 
 ```Python
-# src/deepaudit/scanners/__init__.py
+# src/vyne/scanners/__init__.py
 from .dependency import verify_dependencies
 from .secret import scan_for_secrets
 from .static import audit_static_calls

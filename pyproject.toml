@@ -28,6 +28,8 @@ dependencies = [
     "rich>=13.7.0",         # Professional CLI Output
     "python-dotenv>=1.0.1", # Environment variable loading
     "PyYAML>=6.0.1",        # YAML config parsing
+    "fastapi>=0.105.0",     # Web API layer
+    "uvicorn>=0.23.0",      # ASGI server for FastAPI
 ]
 
 [project.optional-dependencies]

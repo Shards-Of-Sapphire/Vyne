@@ -1,4 +1,4 @@
-# Contributing to DeepAudit
+# Contributing to Vyne
 
 ## 1. Branching Strategy
 - `main`: Production-ready, stable releases (v0.1.0, etc.).

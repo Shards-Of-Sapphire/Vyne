@@ -5,8 +5,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from ..engine.parser import CodeParser
-from ..scanners.scanners import ScannerRegistry
+from vyne.engine.parser import CodeParser
+from vyne.scanners.scanners import ScannerRegistry
 
 # Initialize the FastAPI application
 app = FastAPI(
@@ -27,14 +27,23 @@ app.add_middleware(
 
 # Define the expected JSON payload from the user/dashboard
 class ScanRequest(BaseModel):
+    """
+    Pydantic model for the scan request payload.
+    
+    Attributes:
+        code (str): The raw Python code to be scanned.
+        filename (str): Optional filename for the code snippet (defaults to 'snippet.py').
+    """
     code: str
     filename: str = "snippet.py"
 
 @app.post("/api/v1/scan")
 async def scan_code(request: ScanRequest):
     """
-    Receives raw code via HTTP POST, scans it with the localized
+    FastAPI endpoint that receives raw code via HTTP POST, scans it with the localized
     Vyne engine, and returns structured findings as JSON.
+    
+    This endpoint uses temporary files for parsing and ensures cleanup to prevent disk bloat.
     """
     if not request.code.strip():
         raise HTTPException(status_code=400, detail="No code provided.")

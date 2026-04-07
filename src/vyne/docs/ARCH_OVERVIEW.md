@@ -1,7 +1,7 @@
-# 🏛️ DeepAudit Backend Architecture
+# 🏛️ Vyne Backend Architecture
 
 ### 1. Core Philosophy
-DeepAudit is a **Modular Static Analysis Tool (SAST)**. It must remain "Vendor Agnostic," meaning the core engine should work regardless of whether we are scanning Python, JavaScript, or C++.
+Vyne is a **Modular Static Analysis Tool (SAST)**. It must remain "Vendor Agnostic," meaning the core engine should work regardless of whether we are scanning Python, JavaScript, or C++.
 
 ### 2. The Execution Pipeline
 Every audit must follow this strict sequence:
