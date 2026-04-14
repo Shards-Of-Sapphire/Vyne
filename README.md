@@ -23,13 +23,14 @@ python -m venv .venv
 .venv\Scripts\activate
 
 pip install -r requirements.txt
+python verify_setup.py
 pip install -e .
 ```
 
 Run a scan:
 
 ```bash
-vyne tests/v0.5.0_test.py
+vyne tests/v0.3.1_test.py
 ```
 
 ## Local development
