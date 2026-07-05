@@ -1,0 +1,10 @@
+repos:
+  - repo: local
+    hooks:
+      - id: vyne-scan
+        name: Vyne fast staged-file scan
+        entry: python scripts/pre_commit_vyne.py
+        language: system
+        pass_filenames: true
+        files: \.(py)$
+        stages: [commit]

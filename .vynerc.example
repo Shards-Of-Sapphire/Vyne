@@ -1,0 +1,7 @@
+# Example .vynerc file for project-level suppressions
+# Place a .vynerc in your repo root to ignore specific scanner findings.
+
+ignore:
+  - "SecretScanner"            # ignore all findings emitted by SecretScanner
+  - "AWS_SECRET_ACCESS_KEY"    # ignore findings that contain this substring
+  - "ThirdPartyDepXYZ"        # ignore by scanner name or message substring

@@ -638,9 +638,9 @@ malicious_data = b"cos\\nsystem\\n(S'rm -rf /'\\ntR."`
               variant="emerald"
             />
             <MetricCard
-              title="Detection Rate"
-              value="98.7%"
-              subtitle="Accuracy of the current engine model"
+              title="Detection Scope"
+              value="Bounded"
+              subtitle="High-precision detection for a bounded class of statically-verifiable hallucination patterns"
               icon={<BarChart3 className="w-6 h-6" />}
               variant="violet"
             />

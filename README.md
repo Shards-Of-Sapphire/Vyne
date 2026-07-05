@@ -4,11 +4,13 @@ Security signal for AI-built code.
 Status: `v0.5.0`
 
 ## What Vyne does
-Vyne scans AI-assisted Python code for the issues that slip through fast generation loops:
+Vyne detects hallucinated imports, phantom attributes, and hardcoded secrets in AI-generated Python code.
 
-- hallucinated or suspicious dependencies
-- dangerous dynamic execution patterns
-- leaked secrets and high-entropy tokens
+This scope is intentionally bounded: Vyne focuses on statically-verifiable issues in Python code such as:
+
+- hallucinated or suspicious dependencies (import-time mismatches)
+- phantom or misspecified attributes on imported modules
+- hardcoded secrets and high-entropy tokens
 
 It combines Tree-sitter parsing with lightweight scanners so teams can review generated code before it ships.
 

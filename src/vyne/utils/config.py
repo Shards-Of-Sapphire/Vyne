@@ -13,6 +13,8 @@ class ConfigManager:
             "logging", "abc", "math", "collections", "re"
         }
         self.data = self._load()
+        # Load project-level .vynerc if present
+        self.vyne_rc = self._load_vyne_rc()
 
     def _load(self):
         if not self.path.exists():
@@ -30,6 +32,29 @@ class ConfigManager:
         
         # Combine everything into one master set
         return internal | self.std_lib | user_defined
+
+    def _load_vyne_rc(self):
+        """Load optional per-project .vynerc YAML file.
+
+        Format example (.vynerc):
+        ignore:
+          - "ScannerNameToIgnore"
+          - "some message substring to ignore"
+        """
+        rc_path = Path('.vynerc')
+        if not rc_path.exists():
+            return {"ignore": []}
+        try:
+            with open(rc_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f) or {}
+                # Normalize
+                return {"ignore": data.get("ignore", [])}
+        except Exception:
+            return {"ignore": []}
+
+    def get_project_allowlist(self):
+        """Return list of ignore patterns from .vynerc"""
+        return list(self.vyne_rc.get("ignore", []))
     
 # Automatically find the .env file in the project root
 env_path = Path(__file__).resolve().parent.parent.parent.parent / '.env'

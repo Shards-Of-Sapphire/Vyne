@@ -10,9 +10,29 @@ from rich.table import Table
 from . import VERSION
 from .engine.parser import CodeParser
 from .scanners.scanners import ScannerRegistry
+from .utils.config import ConfigManager
 
 console = Console()
 registry = ScannerRegistry()
+config = ConfigManager()
+
+def _filter_findings_by_allowlist(findings_by_scanner: list[list[dict]], allowlist: list[str]) -> list[list[dict]]:
+    """Filter out findings that match any allowlist pattern (simple substring match)."""
+    if not allowlist:
+        return findings_by_scanner
+
+    filtered: list[list[dict]] = []
+    for scanner_findings in findings_by_scanner:
+        kept = []
+        for finding in scanner_findings:
+            text = "|".join([str(finding.get(k, "")) for k in ("scanner", "message", "snippet")])
+            # If any allowlist pattern is a substring of the finding text, skip
+            if any(pattern and pattern in text for pattern in allowlist):
+                continue
+            kept.append(finding)
+        if kept:
+            filtered.append(kept)
+    return filtered
 
 def display_header() -> None:
     """Render the CLI header."""
@@ -120,6 +140,10 @@ def run_audit(file_path: str) -> int:
             progress.advance(task)
 
     # 3. Rendering Phase
+    # Apply project allowlist from .vynerc (if present)
+    allowlist = config.get_project_allowlist()
+    findings_by_scanner = _filter_findings_by_allowlist(findings_by_scanner, allowlist)
+
     findings_count = _render_findings(results_table, findings_by_scanner)
     if findings_count > 0:
         console.print(results_table)
@@ -135,7 +159,7 @@ def run_audit(file_path: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Vyne CLI")
-    parser.add_argument("file", help="Path to the Python file to audit")
+    parser.add_argument("file", nargs='+', help="Path(s) to the Python file(s) to audit")
     parser.add_argument(
         "-v",
         "--version",
@@ -143,7 +167,12 @@ def main() -> int:
         version=f"Vyne {VERSION}",
     )
     args = parser.parse_args()
-    return run_audit(args.file)
+    # Support multiple files passed from pre-commit
+    exit_codes = []
+    for f in args.file:
+        exit_codes.append(run_audit(f))
+    # If any run returned non-zero, exit non-zero
+    return 1 if any(code != 0 for code in exit_codes) else 0
 
 
 if __name__ == "__main__":
