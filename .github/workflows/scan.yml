@@ -31,4 +31,4 @@ jobs:
         with:
           name: vyne-scan-report
           path: |
-            .
+            vyne_scan_report.json

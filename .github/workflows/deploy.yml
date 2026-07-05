@@ -1,0 +1,17 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  cicd:
+    uses: sapphire-collective/devops-central/.github/workflows/ci-cd-template.yml@main
+    with:
+      environment: production
+    secrets:
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      DISCORD_WEBHOOK_URL: ${{ https://discord.com/api/webhooks/1523196101996314625/zHLIz1wyV-FX1UoHwY2A16ytgqYBguFlRWPzgCXHfo_HaO9OUFNow7EKULL7Fh33tT_A }}
