@@ -15,11 +15,13 @@ This scope is intentionally bounded: Vyne focuses on statically-verifiable issue
 It combines Tree-sitter parsing with lightweight scanners so teams can review generated code before it ships.
 
 ## How it works
+
 1. Parse the target file into a syntax tree with Tree-sitter.
 2. Run focused scanners across the AST and raw source.
 3. Return structured findings to the CLI, API, or dashboard.
 
 ## Quick start
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
@@ -36,6 +38,7 @@ vyne tests/v0.3.1_test.py
 ```
 
 ## Local development
+
 Start the API:
 
 ```bash
@@ -51,11 +54,13 @@ npm run dev
 ```
 
 ## Verification
+
 ```bash
 pytest tests/
 ```
 
 ## Project layout
+
 - `src/vyne`: Python package, scanners, API, and shared utilities
 - `web`: Next.js dashboard
 - `tools`: developer automation and documentation helpers
