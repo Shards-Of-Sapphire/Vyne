@@ -3,6 +3,7 @@
 import ast
 from typing import List
 from ..utils.vdi import check_package
+from ..utils.config import ConfigManager
 
 
 def _extract_imports_from_ast(raw_code: str) -> List[dict]:
@@ -53,6 +54,7 @@ def _extract_imports_from_ast(raw_code: str) -> List[dict]:
 
 def scan(ast_node, raw_code: str, file_path: str) -> List[dict]:
     findings = []
+    trusted_namespaces = ConfigManager().get_trusted_namespaces()
 
     imports = _extract_imports_from_ast(raw_code)
     for imp in imports:
@@ -60,9 +62,12 @@ def scan(ast_node, raw_code: str, file_path: str) -> List[dict]:
         line = imp.get("line", 0)
         conditional = imp.get("conditional", False)
 
+        if name in trusted_namespaces:
+            continue
+
         v = check_package(name)
 
-        if not v.get("pypi_exists"):
+        if v.get("verification_status") == "missing":
             findings.append({
                 "scanner": "DependencyScanner",
                 "severity": "CRITICAL",
@@ -70,6 +75,16 @@ def scan(ast_node, raw_code: str, file_path: str) -> List[dict]:
                 "message": f"Package '{name}' not found on PyPI — likely hallucinated",
                 "snippet": name,
                 "confidence": v.get("confidence", 0.95),
+            })
+        elif v.get("verification_status") == "unavailable":
+            findings.append({
+                "scanner": "DependencyScanner",
+                "severity": "INFO",
+                "line": line,
+                "message": f"Package '{name}' could not be verified because the package registry was unavailable",
+                "snippet": name,
+                "confidence": 0.0,
+                "verification_status": "unavailable",
             })
         elif v.get("semver_major_mismatch"):
             findings.append({

@@ -167,6 +167,5 @@ When modifying scanners:
 ---
 
 **Last Updated:** April 7, 2026
-**Test Coverage:** 130-170 findings across all scanners
-**VDI Accuracy:** >95% confidence on hallucinated imports</content>
-<parameter name="filePath">c:\Users\shaik\OneDrive\Desktop\Vyne\tests\SECURITY_TEST_SUITE.md
+**Test Coverage:** See the executable tests in this directory; expected findings are scanner- and fixture-specific.
+**VDI limitation:** Confidence is heuristic. Registry outages are reported as unavailable and are not evidence of a hallucinated import.

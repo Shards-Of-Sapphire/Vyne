@@ -16,23 +16,22 @@ console = Console()
 registry = ScannerRegistry()
 config = ConfigManager()
 
-def _filter_findings_by_allowlist(findings_by_scanner: list[list[dict]], allowlist: list[str]) -> list[list[dict]]:
-    """Filter out findings that match any allowlist pattern (simple substring match)."""
+def _filter_findings_by_allowlist(findings: list[dict], allowlist: list[str]) -> list[dict]:
+    """Filter out findings that match an existing project ignore pattern."""
     if not allowlist:
-        return findings_by_scanner
+        return findings
 
-    filtered: list[list[dict]] = []
-    for scanner_findings in findings_by_scanner:
-        kept = []
-        for finding in scanner_findings:
-            text = "|".join([str(finding.get(k, "")) for k in ("scanner", "message", "snippet")])
-            # If any allowlist pattern is a substring of the finding text, skip
-            if any(pattern and pattern in text for pattern in allowlist):
-                continue
-            kept.append(finding)
-        if kept:
-            filtered.append(kept)
-    return filtered
+    return [
+        finding
+        for finding in findings
+        if not any(
+            pattern
+            and pattern in "|".join(
+                str(finding.get(key, "")) for key in ("scanner", "message", "snippet")
+            )
+            for pattern in allowlist
+        )
+    ]
 
 def display_header() -> None:
     """Render the CLI header."""
@@ -62,35 +61,31 @@ def _build_results_table(filename: str) -> Table:
     return table
 
 
-def _render_findings(table: Table, findings_by_scanner: list[list[dict]]) -> int:
+def _render_findings(table: Table, findings: list[dict]) -> int:
     """Parses the v0.3.0 dictionary schema and populates the UI table."""
     count = 0
-    for scanner_findings in findings_by_scanner:
-        for finding in scanner_findings:
-            count += 1
-            
-            # Extract data using the strict v0.3.0 schema
-            severity = finding.get("severity", "UNKNOWN")
-            line = str(finding.get("line", "?"))
-            scanner = finding.get("scanner", "UnknownScanner")
-            message = finding.get("message", "Unknown issue")
-            snippet = finding.get("snippet", "")
-            
-            # Add dynamic colors based on severity
-            if severity == "CRITICAL":
-                sev_fmt = f"[bold red]{severity}[/bold red]"
-            elif severity == "WARNING":
-                sev_fmt = f"[bold yellow]{severity}[/bold yellow]"
-            else:
-                sev_fmt = f"[bold blue]{severity}[/bold blue]"
-                
-            # Combine message and snippet for a clean UI
-            details = message
-            if snippet:
-                details += f"\n[dim italic]Code: {snippet}[/dim italic]"
-                
-            table.add_row(sev_fmt, line, scanner, details)
-            
+    for finding in findings:
+        count += 1
+
+        severity = finding.get("severity", "UNKNOWN")
+        line = str(finding.get("line", "?"))
+        scanner = finding.get("scanner", "UnknownScanner")
+        message = finding.get("message", "Unknown issue")
+        snippet = finding.get("snippet", "")
+
+        if severity == "CRITICAL":
+            sev_fmt = f"[bold red]{severity}[/bold red]"
+        elif severity == "WARNING":
+            sev_fmt = f"[bold yellow]{severity}[/bold yellow]"
+        else:
+            sev_fmt = f"[bold blue]{severity}[/bold blue]"
+
+        details = message
+        if snippet:
+            details += f"\n[dim italic]Code: {snippet}[/dim italic]"
+
+        table.add_row(sev_fmt, line, scanner, details)
+
     return count
 
 
@@ -117,40 +112,28 @@ def run_audit(file_path: str) -> int:
             raw_code = f.read()
 
     results_table = _build_results_table(target.name)
-    findings_by_scanner: list[list[dict]] = []
+    findings: list[dict] = []
 
     # 2. Scanning Phase (Dynamic Registry Integration)
     with Progress(transient=True) as progress:
-        task = progress.add_task(
+        progress.add_task(
             "[cyan]Scanning for vulnerabilities...",
             total=len(registry.scanners),
         )
-        
-        for scanner_func in registry.scanners:
-            try:
-                # Execute the dynamic hook: scan(ast_node, raw_code, file_path)
-                findings = scanner_func(ast_root, raw_code, str(target))
-                
-                # Keep the nested list structure for _render_findings
-                if findings:
-                    findings_by_scanner.append(findings)
-            except Exception as e:
-                console.print(f"[bold yellow]Warning:[/bold yellow] Scanner module crashed - {e}")
-                
-            progress.advance(task)
+        findings = registry.run_all(ast_root, raw_code, str(target))
 
     # 3. Rendering Phase
     # Apply project allowlist from .vynerc (if present)
     allowlist = config.get_project_allowlist()
-    findings_by_scanner = _filter_findings_by_allowlist(findings_by_scanner, allowlist)
+    findings = _filter_findings_by_allowlist(findings, allowlist)
 
-    findings_count = _render_findings(results_table, findings_by_scanner)
+    findings_count = _render_findings(results_table, findings)
     if findings_count > 0:
         console.print(results_table)
         console.print(
             f"\n[bold red]Vyne flagged {findings_count} potential risks.[/bold red]"
         )
-        return 1
+        return 1 if config.should_block(findings) else 0
 
     console.print(
         "\n[bold green]Vyne found no major hallucinations or leaks.[/bold green]"

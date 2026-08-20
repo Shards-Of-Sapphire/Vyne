@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-commit runner for Vyne: scans staged Python files and fails commit on critical findings.
+"""Pre-commit runner for Vyne: scans staged Python files using Vyne's gate policy.
 
 This script is intentionally lightweight and calls the module CLI so it works in dev and CI.
 """
@@ -19,8 +19,8 @@ for f in files:
         failed = True
 
 if failed:
-    print("\nVyne pre-commit: blocked commit due to findings. Run `vyne <file>` to inspect.`")
+    print("\nVyne pre-commit: blocked commit due to configured blocking findings.")
     sys.exit(1)
 
-print("\nVyne pre-commit: no critical findings detected.")
+print("\nVyne pre-commit: no blocking findings detected.")
 sys.exit(0)

@@ -56,7 +56,7 @@ Returns:
 
 ## 📦 Module: `vyne\scanners\dependency.py`
 
-### `def scan(ast_node, raw_code, file_path)`
+### `def scan(ast_node, raw_code, file_path)` — Dependency scanning
 
 Scans for known hallucinated or dangerous AI dependencies.
 
@@ -66,12 +66,11 @@ Scans for known hallucinated or dangerous AI dependencies.
 
 The central execution hub for Vyne's security modules.
 
-This registry dynamically discovers and loads all standalone scanners 
-(e.g., dependency, secret, static) residing in the scanners directory. 
-It ensures that new vulnerability checks can be added to the flagship 
+This registry dynamically discovers and loads all standalone scanner (e.g., dependency, secret, static) residing in the scanners directory.
+It ensures that new vulnerability checks can be added to the flagship
 without modifying the core execution loop.
 
-### `def __init__(self)`
+### `CodeParser.__init__(self)`
 
 Initializes the registry and maps all available scanners.
 
@@ -89,7 +88,7 @@ Returns:
 
 ## 📦 Module: `vyne\scanners\secret.py`
 
-### `def scan(ast_node, raw_code, file_path)`
+### `def scan(ast_node, raw_code, file_path)` — Secret scanning
 
 Scans for high-entropy strings indicating hallucinated or leaked secrets.
 
@@ -99,11 +98,11 @@ Scans for high-entropy strings indicating hallucinated or leaked secrets.
 
 No documentation provided.
 
-### `def scan(ast_node, raw_code, file_path)`
+### `def scan(ast_node, raw_code, file_path)` — Static analysis
 
 Performs static analysis to catch dangerous execution functions using AST parsing.
 
-### `def __init__(self)`
+### `ScannerRegistry.__init__(self)`
 
 *Warning: No docstring provided.*
 
@@ -158,4 +157,3 @@ No documentation provided.
 
 Returns a Rich-integrated logger.
 Ensures backend modules don't break the UI.
-

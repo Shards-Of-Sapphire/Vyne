@@ -19,8 +19,11 @@ class ConfigManager:
     def _load(self):
         if not self.path.exists():
             return {"whitelist": [], "scanners": {}}
-        with open(self.path, "r") as f:
-            return yaml.safe_load(f)
+        try:
+            with open(self.path, "r", encoding="utf-8") as f:
+                return yaml.safe_load(f) or {"whitelist": [], "scanners": {}}
+        except (OSError, yaml.YAMLError):
+            return {"whitelist": [], "scanners": {}}
 
     def get_trusted_namespaces(self):
         """
@@ -36,10 +39,11 @@ class ConfigManager:
     def _load_vyne_rc(self):
         """Load optional per-project .vynerc YAML file.
 
-        Format example (.vynerc):
+                Format example (.vynerc):
         ignore:
           - "ScannerNameToIgnore"
           - "some message substring to ignore"
+                block_on: CRITICAL
         """
         rc_path = Path('.vynerc')
         if not rc_path.exists():
@@ -48,13 +52,31 @@ class ConfigManager:
             with open(rc_path, 'r', encoding='utf-8') as f:
                 data = yaml.safe_load(f) or {}
                 # Normalize
-                return {"ignore": data.get("ignore", [])}
+                block_on = data.get("block_on", "CRITICAL")
+                if isinstance(block_on, str):
+                    block_on = [block_on]
+                return {
+                    "ignore": data.get("ignore", []),
+                    "block_on": block_on,
+                }
         except Exception:
-            return {"ignore": []}
+            return {"ignore": [], "block_on": ["CRITICAL"]}
 
     def get_project_allowlist(self):
         """Return list of ignore patterns from .vynerc"""
         return list(self.vyne_rc.get("ignore", []))
+
+    def get_blocking_severities(self):
+        """Return configured severities that should produce a failing exit code."""
+        configured = self.vyne_rc.get("block_on", ["CRITICAL"])
+        if not isinstance(configured, list):
+            configured = [configured]
+        return {str(severity).upper() for severity in configured if severity}
+
+    def should_block(self, findings):
+        """Return whether any finding matches the configured blocking policy."""
+        blocking = self.get_blocking_severities()
+        return any(str(finding.get("severity", "")).upper() in blocking for finding in findings)
     
 # Automatically find the .env file in the project root
 env_path = Path(__file__).resolve().parent.parent.parent.parent / '.env'

@@ -6,15 +6,15 @@ Status: `v0.5.0`
 
 ## What Vyne does
 
-Vyne detects hallucinated imports, phantom attributes, and hardcoded secrets in AI-generated Python code.
+Vyne detects hallucinated imports, risky execution patterns, and hardcoded secrets in AI-generated Python code.
 
 This scope is intentionally bounded: Vyne focuses on statically-verifiable issues in Python code such as:
 
-- hallucinated or suspicious dependencies (import-time mismatches)
-- phantom or misspecified attributes on imported modules
+- dependencies that cannot be verified in the package registry
+- dangerous execution calls such as `eval`, `exec`, and `os.system`
 - hardcoded secrets and high-entropy tokens
 
-It combines Tree-sitter parsing with lightweight scanners so teams can review generated code before it ships.
+It combines Tree-sitter parsing with lightweight scanners so teams can review generated Python code before it ships. Its results are bounded static-analysis signals, not a guarantee that code is safe.
 
 ## How it works
 
@@ -39,6 +39,18 @@ Run a scan:
 vyne tests/v0.3.1_test.py
 ```
 
+By default, only `CRITICAL` findings fail the command. Configure a stricter gate in
+`.vynerc` when needed:
+
+```yaml
+block_on:
+- CRITICAL
+- HIGH
+```
+
+Registry outages are reported as `INFO` and `unavailable`; they are not treated as
+evidence that a dependency is hallucinated.
+
 ## Local development
 
 Start the API:
@@ -60,6 +72,9 @@ npm run dev
 ```bash
 pytest tests/
 ```
+
+See [the threat model](src/vyne/docs/THREAT_MODEL.md) for supported attack classes,
+known blind spots, and the limits of deterministic scanning.
 
 ## Project layout
 
