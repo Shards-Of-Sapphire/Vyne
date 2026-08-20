@@ -1,9 +1,11 @@
 # Vyne
+
 Security signal for AI-built code.
 
 Status: `v0.5.0`
 
 ## What Vyne does
+
 Vyne detects hallucinated imports, phantom attributes, and hardcoded secrets in AI-generated Python code.
 
 This scope is intentionally bounded: Vyne focuses on statically-verifiable issues in Python code such as:
