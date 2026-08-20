@@ -15,11 +15,13 @@ This test suite validates Vyne's security scanning capabilities across three spe
 ## Test Structure
 
 ### Core Test Files
+
 - `tests/scanners_test.py` - Scanner integration and pipeline validation
 - `tests/vuln_hardcoded_secrets_test.py` - Secret detection test cases
 - `tests/fake_deps_test.py` - VDI dependency analysis validation
 
 ### Vulnerability Test Files
+
 - `tests/vuln_static_analysis_test.py` - Dangerous function patterns
 - `tests/vuln_hardcoded_secrets_test.py` - API keys and credentials
 - `tests/vuln_fake_dependencies_test.py` - Hallucinated package detection
@@ -27,12 +29,13 @@ This test suite validates Vyne's security scanning capabilities across three spe
 ## Scanner Validation Matrix
 
 ### StaticScanner (AST-based Analysis)
+
 **Purpose:** Detect dangerous dynamic execution patterns
 **Confidence Threshold:** 0.8
 **Expected Findings:** 45-55
 
 | Pattern | Detection Method | Severity | Confidence |
-|---------|------------------|----------|------------|
+| --------- | ------------------ | ---------- | ------------ |
 | `eval()` | AST Call node | CRITICAL | 0.9 |
 | `exec()` | AST Call node | CRITICAL | 0.9 |
 | `os.system()` | AST Attribute call | HIGH | 0.9 |
@@ -41,12 +44,13 @@ This test suite validates Vyne's security scanning capabilities across three spe
 | `subprocess.run()` | AST Attribute call | HIGH | 0.8 |
 
 ### SecretScanner (Entropy Analysis)
+
 **Purpose:** Identify high-entropy strings indicating leaked secrets
 **Entropy Threshold:** 4.5 bits per character
 **Expected Findings:** 35-45
 
 | Secret Type | Pattern | Entropy Range | Confidence |
-|-------------|---------|---------------|------------|
+| ------------- | --------- | --------------- | ------------ |
 | API Keys | `sk-*`, `pk_*` | 4.8-5.2 | 0.85 |
 | JWT Tokens | `eyJ*` | 5.0-5.5 | 0.90 |
 | Private Keys | `-----BEGIN` | 5.2-6.0 | 0.95 |
@@ -54,12 +58,13 @@ This test suite validates Vyne's security scanning capabilities across three spe
 | Generic Secrets | High entropy strings | 4.5+ | 0.75 |
 
 ### DependencyScanner (VDI Analysis)
+
 **Purpose:** Detect hallucinated or dangerous AI-generated imports
 **Analysis Methods:** Environment introspection, PyPI validation, structural fingerprinting
 **Expected Findings:** 50-70
 
 | Risk Category | Detection Logic | Confidence Range | Analysis Type |
-|---------------|-----------------|------------------|---------------|
+| --------------- | ----------------- | ------------------ | --------------- |
 | Non-existent packages | `importlib.util.find_spec()` | 0.9-1.0 | Environment |
 | Typosquatted packages | String similarity + PyPI check | 0.7-0.9 | Multi-factor |
 | Malicious packages | PyPI metadata analysis | 0.8-0.95 | Registry |
@@ -69,6 +74,7 @@ This test suite validates Vyne's security scanning capabilities across three spe
 ## VDI (Vyne Dynamic Inference) Validation
 
 ### Multi-Factor Analysis Pipeline
+
 1. **Environment Check**: `importlib.util.find_spec(package_name)`
 2. **PyPI Validation**: HTTP request to `pypi.org/pypi/{package}/json`
 3. **Structural Analysis**: AST pattern recognition for import contexts
@@ -76,7 +82,8 @@ This test suite validates Vyne's security scanning capabilities across three spe
 5. **Confidence Calculation**: Weighted scoring algorithm
 
 ### Confidence Scoring Algorithm
-```
+
+```bash
 confidence = (
     env_check_weight * (1.0 if exists_locally else 0.0) +
     pypi_weight * (1.0 if exists_on_pypi else 0.0) +
@@ -88,7 +95,7 @@ confidence = (
 ### Expected VDI Findings by Category
 
 | Finding Type | Example | Expected Count | Confidence Range |
-|--------------|---------|----------------|------------------|
+| -------------- | --------- | ---------------- | ------------------ |
 | Non-existent imports | `import nonexistent_pkg` | 15-20 | 0.95-1.0 |
 | Typosquatted packages | `import reqests` | 8-12 | 0.75-0.9 |
 | Malicious indicators | `import keylogger` | 5-8 | 0.8-0.95 |
@@ -98,13 +105,15 @@ confidence = (
 ## Test Execution
 
 ### Running the Full Suite
+
 ```bash
 cd /path/to/vyne
 python -m pytest tests/ -v --tb=short
 ```
 
 ### Expected Output
-```
+
+```bash
 ======================== test session starts ========================
 collected 15 items
 
@@ -119,6 +128,7 @@ tests/fake_deps_test.py::test_vdi_confidence_scoring PASSED
 ```
 
 ### Performance Benchmarks
+
 - **Total execution time**: < 5 seconds
 - **Memory usage**: < 50MB
 - **False positive rate**: < 2%
@@ -127,6 +137,7 @@ tests/fake_deps_test.py::test_vdi_confidence_scoring PASSED
 ## Scanner Integration Testing
 
 ### ScannerRegistry Validation
+
 ```python
 def test_scanner_registry_loading():
     registry = ScannerRegistry()
@@ -139,6 +150,7 @@ def test_scanner_registry_loading():
 ```
 
 ### Pipeline End-to-End Test
+
 ```python
 def test_full_pipeline():
     code = "import fake_package; eval(user_input)"
@@ -152,13 +164,16 @@ def test_full_pipeline():
 ## Maintenance
 
 ### Adding New Test Cases
+
 1. Create vulnerable test code in `tests/vuln_*.py`
 2. Update expected finding counts in this document
 3. Ensure VDI confidence scores are validated
 4. Run full test suite to verify no regressions
 
 ### Updating Scanner Expectations
+
 When modifying scanners:
+
 1. Update expected finding counts
 2. Adjust confidence score ranges if needed
 3. Validate against real AI-generated code samples
